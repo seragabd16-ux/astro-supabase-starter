@@ -2,16 +2,56 @@
 @plugin "@tailwindcss/typography";
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-neutral-950 text-neutral-50 font-["Space_Grotesk",sans-serif];
+  }
   a {
-    @apply hover:underline hover:underline-offset-2 hover:decoration-green-500;
-  }
-  td {
-    @apply pt-4 pb-6;
-  }
-  th {
-    @apply py-4;
+    @apply transition duration-200 hover:text-emerald-300 hover:no-underline;
   }
   img {
-    @apply border rounded-sm border-neutral-500;
+    @apply rounded-2xl border border-white/10 shadow-lg shadow-emerald-500/10;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center;
+  }
+  .animate-gradient {
+    background-size: 400% 400%;
+    animation: gradient-move 18s ease infinite;
+  }
+  @keyframes gradient-move {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  .animate-orbit {
+    animation: orbit 14s linear infinite;
+    transform-origin: center;
+  }
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg) translateX(16px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(16px) rotate(-360deg);
+    }
   }
 }
