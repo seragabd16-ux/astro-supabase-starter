@@ -87,6 +87,24 @@ const experiences = [
       "Hybrid fulfillment across Dubai, Amman, and Berlin keeps drops fast while offsetting every shipment.",
   },
 ];
+
+const snapshot = [
+  {
+    tag: "Drop now shipping",
+    title: "Liminal Lines coats",
+    detail: "Asymmetric satin trenches with reflective seam piping",
+  },
+  {
+    tag: "Motion feature",
+    title: "Skyline Pulse AR",
+    detail: "Scan the code to launch volumetric runway overlays",
+  },
+  {
+    tag: "Collab studio",
+    title: "Shkoon x PalStyle",
+    detail: "Exclusive score packs for each limited drop night",
+  },
+];
 ---
 
 <Layout title="PalStyle Studio — Fashion engineered for motion" description="Discover PalStyle Studio, the MENA-born label infusing keffiyeh heritage with kinetic storytelling, immersive commerce, and sustainable couture drops.">
@@ -148,6 +166,25 @@ const experiences = [
         </div>
       </div>
     </div>
+  </section>
+
+  <section
+    id="snapshot"
+    class="mt-14 grid gap-6 rounded-[2.5rem] border border-white/10 bg-white/5 p-8 shadow-[0_40px_140px_-60px_rgba(16,185,129,0.35)] backdrop-blur-xl sm:grid-cols-3"
+  >
+    {snapshot.map((item) => (
+      <article class="group flex flex-col justify-between gap-6 rounded-3xl border border-white/10 bg-neutral-950/60 p-6 transition hover:border-emerald-300/60 hover:bg-neutral-900/70">
+        <div class="space-y-4">
+          <p class="text-[11px] uppercase tracking-[0.4em] text-emerald-200/80">{item.tag}</p>
+          <h3 class="text-2xl font-semibold text-white transition group-hover:text-emerald-200">{item.title}</h3>
+          <p class="text-sm text-neutral-300/90">{item.detail}</p>
+        </div>
+        <div class="flex items-center justify-between text-[11px] uppercase tracking-[0.3em] text-neutral-500">
+          <span>Preview motion</span>
+          <span aria-hidden="true" class="transition group-hover:translate-x-1 group-hover:text-emerald-200">↗</span>
+        </div>
+      </article>
+    ))}
   </section>
 
   <section id="collections" class="mt-20 space-y-10">
