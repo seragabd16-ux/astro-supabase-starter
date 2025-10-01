@@ -1,9 +1,119 @@
-<header class="max-w-4xl mx-auto mt-6 mb-16">
-  <nav class="flex justify-between">
+---
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "https://supabase.com", label: "Supabase" },
+];
+---
+
+<header class="relative max-w-4xl mx-auto mt-6 mb-16">
+  <nav class="flex items-center justify-between">
     <a
       href="/"
       class="text-2xl font-bold hover:underline hover:underline-offset-4 hover:decoration-green-500"
       ><span class="text-green-500">&#10022;</span> Astro Supabase Starter
     </a>
+    <button
+      type="button"
+      class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium border rounded-md border-white/20 bg-white/5 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500 sm:hidden"
+      data-menu-toggle
+      aria-controls="site-menu"
+      aria-expanded="false"
+    >
+      Menu
+    </button>
+    <ul class="hidden gap-6 text-sm sm:flex">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="transition hover:text-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+            >{link.label}</a
+          >
+        </li>
+      ))}
+    </ul>
   </nav>
+
+  <div
+    id="site-menu"
+    data-menu
+    class="fixed inset-0 z-50 flex-col gap-6 p-6 text-lg bg-neutral-900/95 sm:hidden hidden"
+    aria-hidden="true"
+  >
+    <div class="flex items-center justify-between">
+      <span class="text-xl font-semibold">Menu</span>
+      <button
+        type="button"
+        class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium border rounded-md border-white/20 bg-white/5 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+        data-menu-close
+      >
+        Close
+      </button>
+    </div>
+    <ul class="flex flex-col gap-4">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            data-menu-focus
+            href={link.href}
+            class="transition hover:text-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+            >{link.label}</a
+          >
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div
+    data-menu-overlay
+    class="fixed inset-0 z-40 hidden bg-black/60 sm:hidden"
+    aria-hidden="true"
+  ></div>
 </header>
+
+<script type="module">
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const closeBtn = document.querySelector('[data-menu-close]');
+  const menu = document.querySelector('[data-menu]');
+  const overlay = document.querySelector('[data-menu-overlay]');
+  let open = false;
+
+  function updateState(nextOpen) {
+    open = nextOpen;
+    toggle?.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('hidden', !open);
+    menu?.setAttribute('aria-hidden', String(!open));
+    overlay?.classList.toggle('hidden', !open);
+    overlay?.setAttribute('aria-hidden', String(!open));
+    document.documentElement.classList.toggle('overflow-hidden', open);
+
+    if (open) {
+      const firstFocusable = menu?.querySelector('[data-menu-focus]');
+      if (firstFocusable instanceof HTMLElement) {
+        firstFocusable.focus();
+      }
+    } else if (toggle instanceof HTMLElement) {
+      toggle.focus();
+    }
+  }
+
+  updateState(false);
+
+  toggle?.addEventListener('click', () => {
+    updateState(!open);
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    updateState(false);
+  });
+
+  overlay?.addEventListener('click', () => {
+    updateState(false);
+  });
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && open) {
+      updateState(false);
+    }
+  });
+</script>
