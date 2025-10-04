@@ -1,71 +1,341 @@
 ---
-import { getEntry } from "astro:content";
-import Alert from "../components/Alert.astro";
-import Guide from "../components/Guide.astro";
 import Layout from "../components/Layout.astro";
-import TableRow from "../components/TableRow.astro";
-import { supabase } from "../utils/database";
 
-export const prerender = false;
+const journey = [
+  {
+    step: "01",
+    title: "الترحيب الهادئ",
+    description:
+      "Landing page ناعمة تمرر المشتري على نبض العلامة، إضاءة الكوفية المتحركة، وروابط واضحة لكل قسم قبل أي قرار شراء.",
+  },
+  {
+    step: "02",
+    title: "جولة المحتوى",
+    description:
+      "Scroll خفيف يعرف الزائر على الملفات التحريرية، مقاطع الموشن، والمنتجات الأكثر طلبًا مع إمكانية الرجوع لأي قسم فورًا.",
+  },
+  {
+    step: "03",
+    title: "دفع في أقل من 60 ثانية",
+    description:
+      "تجربة Checkout متعددة اللغات تدعم PayPal، Wise، وStripe مع حفظ بيانات الشحن للطلبات المتكررة.",
+  },
+];
 
-let frameworks;
-let frameworksError;
+const collections = [
+  {
+    name: "Drop 01 — Tranquil Threads",
+    description: "عباءات حرير-كتان مع تطريز كوفية مصغر وخياطة يدوية من القدس.",
+    priceRange: "$320 – $540",
+    status: "متاح للشحن العالمي",
+  },
+  {
+    name: "Drop 02 — Luminous Nomad",
+    description: "سترات تقنية خفيفة الوزن تتوهج تحت الإضاءة بفضل الخيوط العاكسة.",
+    priceRange: "$280 – $460",
+    status: "ينطلق قريبًا — قائمة الانتظار مفتوحة",
+  },
+  {
+    name: "Drop 03 — Keffiyeh Bloom",
+    description: "فساتين تدرجات ترابية مع قصات معمارية وتصاميم مستوحاة من التراسات الفلسطينية.",
+    priceRange: "$360 – $620",
+    status: "حجز مسبق حصري للمشتركين",
+  },
+];
 
-// Fetch frameworks data from Supabase if connection is set up
-if (supabase) {
-  const { data, error } = await supabase
-    .from("frameworks")
-    .select("*")
-    .order("likes", { ascending: false });
-  frameworks = data;
-  frameworksError = error;
-}
+const motionStories = [
+  {
+    title: "Shimmer Over Jerusalem",
+    copy: "لقطات درون هادئة فوق البلدة القديمة مع دمج خطوط الكوفية في الإضاءة الليلية، جاهزة كحملة تفاعلية.",
+  },
+  {
+    title: "Waves of Ramallah",
+    copy: "مشاهد Slow Motion لأقمشة تتمايل مع الموسيقى الإلكترونية، مثالية للقصص القصيرة والإعلانات السريعة.",
+  },
+  {
+    title: "Orbiting Doha",
+    copy: "موشن 3D يلف حول العارضين ويعرض تفاصيل التطريز بتدرج ضوئي ناعم.",
+  },
+];
 
-// Get guides
-const connectGuide = await getEntry("guides", "guide-connect-supabase");
-const fetchDataGuide = await getEntry("guides", "guide-fetch-data");
+const paymentSolutions = [
+  {
+    name: "PayPal Commerce",
+    benefit: "دعم عالمي مع حماية المشتري",
+    detail: "نربط الحسابات الفردية والتجارية لتسهيل الأقساط الفورية وإدارة الرسوم داخل لوحة التحكم.",
+  },
+  {
+    name: "Wise Platform",
+    benefit: "تحويلات بعملات متعددة",
+    detail: "تسوية لحظية لمبيعات أوروبا والخليج مع أسعار صرف شفافة وتوزيع تلقائي للموردين.",
+  },
+  {
+    name: "Stripe Elements",
+    benefit: "Checkout مخصص",
+    detail: "واجهة دفع ناعمة بخيارات Apple Pay وGoogle Pay مع حفظ آمن للبطاقات واشتراكات الدروب.",
+  },
+];
+
+const logistics = [
+  {
+    label: "MENA Hub",
+    description: "مركز دبي يرسل الطلبات خلال 24 ساعة مع تغليف مبرد للقطع الحساسة.",
+  },
+  {
+    label: "EU Bridge",
+    description: "شركاء في برلين يضمنون توصيلًا بدون جمارك داخل الاتحاد الأوروبي.",
+  },
+  {
+    label: "US Corridor",
+    description: "خط شحن سريع من عمّان إلى نيويورك مع تتبع موحد ورسوم محسّنة.",
+  },
+];
+
+const dashboardModules = [
+  {
+    title: "Sync مع Shopify & Trendyol",
+    description: "مزامنة مخزون لحظية، كتالوجات ثنائية اللغة، واستيراد تقييمات العملاء مباشرة.",
+  },
+  {
+    title: "AI Merchandising",
+    description: "محرك توصية يقترح إطلالات كاملة لكل زائر بالاعتماد على بيانات المشاهدة والشراء.",
+  },
+  {
+    title: "Motion Analytics",
+    description: "تقارير حرارة تتبع أين يتفاعل المستخدم مع الفيديوهات لتسريع التحويل.",
+  },
+];
 ---
 
-<Layout title="Web Frameworks">
-  {
-    supabase ? (
-      frameworks ? (
-        <>
-          <h1 class="mb-8 text-4xl font-bold">
-            Vote for Your Favorite Web Framework
-          </h1>
-          <table class="w-full text-left">
-            <thead>
-              <tr class="font-mono text-base border-t border-b">
-                <th>Name</th>
-                <th>Logo</th>
-                <th>Likes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {frameworks?.map((framework) => (
-                <TableRow framework={framework} />
-              ))}
-            </tbody>
-          </table>
-        </>
-      ) : (
-        <>
-          {frameworksError && (
-            <Alert
-              title={frameworksError.code}
-              text={frameworksError.message}
-              variant="error"
-            />
-          )}
-          {fetchDataGuide && <Guide guide={fetchDataGuide} />}
-        </>
-      )
-    ) : (
-      <>
-        <Alert title="Finish setting up your new site" text="Before your website is ready, you must complete the steps from the guide below to create, populate, and connect your Supabase database."/>
-        {connectGuide && <Guide guide={connectGuide} />}
-      </>
-    )
-  }
+<Layout
+  title="PalStyle — Palestinian Luxury Web10 Flagship"
+  description="متجر أزياء فلسطيني يجمع الكوفية مع الموضة العصرية وتجربة شراء ناعمة تدعم المدفوعات العالمية والشحن السريع."
+>
+  <section
+    id="hero"
+    class="relative isolate mt-6 overflow-hidden rounded-[3.2rem] border border-white/10 bg-white/6 px-7 py-14 sm:px-14 sm:py-16"
+  >
+    <div class="absolute inset-0 -z-10 opacity-60">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.16),_transparent_60%)]"></div>
+      <div
+        class="absolute -right-24 -top-24 h-72 w-72 rounded-full border border-emerald-200/40 bg-gradient-to-br from-emerald-500/15 via-teal-400/10 to-transparent blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-0 left-1/2 h-80 w-[140%] -translate-x-1/2 bg-[linear-gradient(135deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[length:36px_36px] opacity-30"
+      ></div>
+    </div>
+    <div class="flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-xl space-y-7">
+        <span class="accent-pill">Web10 Flagship</span>
+        <h1 class="text-4xl font-semibold leading-tight text-white sm:text-5xl">
+          PalStyle يطلق أول متجر أزياء فلسطيني عالمي بنعومة تحاكي اللمس.
+        </h1>
+        <p class="text-base leading-7 text-neutral-200/90">
+          مزيج من التراث والكوتور المعاصر، مع تجربة دخول تبني الثقة، وتدفق محتوى يعرّف بكل زاوية قبل الشراء، ودفع لحظي يدعم كل أسواقك.
+        </p>
+        <div class="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.4em] text-neutral-300">
+          <span class="rounded-full border border-white/10 px-4 py-2">Heritage Motion</span>
+          <span class="rounded-full border border-white/10 px-4 py-2">Global Checkout</span>
+          <span class="rounded-full border border-white/10 px-4 py-2">Sustainable Fulfillment</span>
+        </div>
+        <div class="flex flex-wrap gap-4 pt-3 text-sm">
+          <a
+            href="#shop"
+            class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 px-7 py-3 text-xs font-semibold uppercase tracking-[0.4em] text-neutral-950 shadow-lg shadow-emerald-500/30 transition hover:brightness-110"
+          >
+            Shop the Drop
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href="#journey"
+            class="inline-flex items-center gap-3 rounded-full border border-white/15 px-7 py-3 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-100 transition hover:border-emerald-200 hover:text-emerald-100"
+          >
+            Preview Journey
+          </a>
+        </div>
+      </div>
+      <div class="relative isolate w-full max-w-sm self-start lg:self-center">
+        <div class="soft-card overflow-hidden px-6 py-8">
+          <div class="relative h-60 w-full overflow-hidden rounded-[2rem] border border-white/10 bg-neutral-950/70">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_60%)]"></div>
+            <div class="absolute inset-0 animate-gradient bg-[conic-gradient(from_180deg_at_50%_50%,rgba(16,185,129,0.06),rgba(20,184,166,0.12),rgba(6,182,212,0.06),rgba(16,185,129,0.06))]"></div>
+            <div class="absolute inset-x-8 bottom-8 rounded-[1.8rem] border border-white/10 bg-white/5 p-5 text-xs uppercase tracking-[0.4em] text-neutral-200/90">
+              <p class="text-[11px] text-emerald-200/80">Motion Lookbook</p>
+              <p class="pt-2 text-sm tracking-[0.25em] text-neutral-100">Swipe • Tap • Convert</p>
+            </div>
+          </div>
+          <p class="mt-5 text-[13px] leading-6 text-neutral-200/90">
+            واجهة سينمائية خفيفة الوزن تعرض القطع بمؤثرات حركة دقيقة وتستجيب للمس على الهاتف خلال <strong>0.3 ثانية</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journey" class="mt-20 grid gap-10 lg:grid-cols-[1.15fr,0.85fr]">
+    <div class="soft-card space-y-6">
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Customer Journey</p>
+        <h2 class="text-3xl font-semibold text-white">مسار ناعم يقود الزائر من الإلهام إلى الشراء.</h2>
+      </div>
+      <div class="space-y-5">
+        {journey.map((item) => (
+          <article class="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-neutral-200/90">
+            <p class="text-xs uppercase tracking-[0.45em] text-emerald-200/80">{item.step}</p>
+            <h3 class="mt-2 text-lg font-semibold text-white">{item.title}</h3>
+            <p class="mt-2 leading-6">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+    <div class="soft-card space-y-6 bg-white/8">
+      <div class="space-y-2 text-xs uppercase tracking-[0.4em] text-emerald-200">
+        <p>ملف المنتجات • المحتوى</p>
+      </div>
+      <h3 class="text-2xl font-semibold text-white">قائمة المنتجات الحية</h3>
+      <p class="text-sm leading-6 text-neutral-200/90">
+        نزودك بملف منتجات متجدد بعد الواجهة الأولى مباشرة: مقاسات، خامات، أسعار، ومقاطع موشن لكل قطعة. يستطيع المشتري التعمق في الأقسام ثم الرجوع لاختيار منتجه خلال لحظات.
+      </p>
+      <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm leading-6 text-neutral-200/80">
+        <p class="text-xs uppercase tracking-[0.4em] text-neutral-400">يتضمن</p>
+        <ul class="mt-3 space-y-2">
+          <li>• روابط سريعة لكل مجموعة فرعية</li>
+          <li>• صور 8K مع طبقات كوفية متحركة</li>
+          <li>• خيار تجربة القياس بالذكاء الاصطناعي</li>
+          <li>• CTA واضح للعودة للدفع أو متابعة التصفح</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections" class="mt-20 space-y-10">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Limited Collections</p>
+        <h2 class="mt-2 text-3xl font-semibold text-white">قطرات أنيقة بحجم صغير وتحويل عالٍ.</h2>
+      </div>
+      <a href="#shop" class="text-xs uppercase tracking-[0.35em] text-neutral-300 hover:text-emerald-200">Shop All ↗</a>
+    </div>
+    <div class="grid gap-6 lg:grid-cols-3">
+      {collections.map((drop) => (
+        <article class="soft-card space-y-4">
+          <div class="space-y-2 text-xs uppercase tracking-[0.35em] text-emerald-200/80">
+            <p>{drop.name}</p>
+            <p class="text-[11px] text-neutral-400">{drop.priceRange}</p>
+          </div>
+          <p class="text-sm leading-6 text-neutral-200/90">{drop.description}</p>
+          <p class="text-[12px] uppercase tracking-[0.35em] text-neutral-300">{drop.status}</p>
+          <button
+            class="w-full rounded-full border border-white/15 px-5 py-3 text-[11px] uppercase tracking-[0.4em] text-neutral-100 transition hover:border-emerald-300 hover:text-emerald-100"
+            type="button"
+          >
+            عرض التفاصيل
+          </button>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="motion" class="mt-20 grid gap-8 rounded-[3rem] border border-white/10 bg-white/6 p-10 lg:grid-cols-[1.1fr,0.9fr]">
+    <div class="space-y-6">
+      <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Motion Studio</p>
+      <h2 class="text-3xl font-semibold text-white">حملات موشن متحركة تدفع العملاء للمشاهدة ثم الشراء.</h2>
+      <p class="text-sm leading-6 text-neutral-200/90">
+        نبني قصصًا بصريّة حقيقية بمؤثرات ناعمة يمكن تضمينها في أي صفحة منتج أو حملة إعلانية. كل قصة مصممة لتعمل على الويب، الهاتف، وشاشات المتجر المنبثقة.
+      </p>
+      <div class="flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.4em] text-neutral-300">
+        <span class="rounded-full border border-white/10 px-4 py-2">Volumetric Video</span>
+        <span class="rounded-full border border-white/10 px-4 py-2">Arabic / English Captions</span>
+        <span class="rounded-full border border-white/10 px-4 py-2">Interactive Hotspots</span>
+      </div>
+    </div>
+    <div class="space-y-4">
+      {motionStories.map((story) => (
+        <article class="rounded-[2.2rem] border border-white/10 bg-white/5 p-6 text-sm leading-6 text-neutral-200/90">
+          <p class="text-xs uppercase tracking-[0.4em] text-emerald-200/80">{story.title}</p>
+          <p class="pt-3">{story.copy}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="payments" class="mt-20 soft-card space-y-8">
+    <div class="space-y-3">
+      <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Payments</p>
+      <h2 class="text-3xl font-semibold text-white">حلول دفع مرنة تربط PayPal، Wise، وStripe بسلاسة.</h2>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {paymentSolutions.map((solution) => (
+        <article class="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm leading-6 text-neutral-200/90">
+          <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">{solution.name}</p>
+          <h3 class="mt-3 text-lg font-semibold text-white">{solution.benefit}</h3>
+          <p class="mt-3">{solution.detail}</p>
+        </article>
+      ))}
+    </div>
+    <div class="rounded-3xl border border-emerald-200/30 bg-emerald-500/10 p-6 text-xs uppercase tracking-[0.35em] text-emerald-100">
+      Checkout واحد يجمع كل البوابات، مع تجربة دفع بثلاث نقرات على الهاتف.
+    </div>
+  </section>
+
+  <section id="logistics" class="mt-20 grid gap-8 lg:grid-cols-[0.9fr,1.1fr]">
+    <div class="soft-card space-y-4">
+      <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Fulfillment</p>
+      <h2 class="text-3xl font-semibold text-white">شبكة شحن مصممة للأزياء الفاخرة.</h2>
+      <p class="text-sm leading-6 text-neutral-200/90">
+        ننشئ عملية شحن محسّنة من لحظة التأكيد حتى التسليم، مع تتبع موحد ورسائل تلقائية بلغتين.
+      </p>
+    </div>
+    <div class="grid gap-5">
+      {logistics.map((lane) => (
+        <article class="rounded-[2.2rem] border border-white/10 bg-white/5 p-6 text-sm leading-6 text-neutral-200/90">
+          <p class="text-xs uppercase tracking-[0.4em] text-emerald-200/80">{lane.label}</p>
+          <p class="pt-3">{lane.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="dashboard" class="mt-20 soft-card space-y-8">
+    <div class="space-y-3">
+      <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Intelligent Dashboard</p>
+      <h2 class="text-3xl font-semibold text-white">لوحة قيادة موحدة تربط كل التطبيقات.</h2>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {dashboardModules.map((module) => (
+        <article class="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm leading-6 text-neutral-200/90">
+          <p class="text-xs uppercase tracking-[0.4em] text-emerald-200/80">{module.title}</p>
+          <p class="pt-3">{module.description}</p>
+        </article>
+      ))}
+    </div>
+    <p class="text-xs uppercase tracking-[0.35em] text-neutral-300">
+      يتكامل مع Shopify، Trendyol، Notion، وSlack لإرسال تنبيهات الدروب والطلبات الجديدة فورًا.
+    </p>
+  </section>
+
+  <section id="shop" class="mt-20 overflow-hidden rounded-[3rem] border border-white/10 bg-white/5 p-10 text-center">
+    <div class="mx-auto flex max-w-3xl flex-col items-center gap-6">
+      <p class="text-xs uppercase tracking-[0.4em] text-emerald-200">Ready to launch</p>
+      <h2 class="text-3xl font-semibold text-white">نبدأ اليوم بناء تجربة PalStyle الكاملة.</h2>
+      <p class="text-sm leading-6 text-neutral-200/90">
+        من أول لمسة على الصفحة إلى آخر إشعار تسليم، نبني المتجر الفلسطيني الذي ينافس أقوى علامات العالم، مع أناقة ناعمة تليق بالمحتوى وبالعملاء.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 text-sm">
+        <a
+          href="mailto:launch@palstyle.co"
+          class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 px-8 py-3 text-xs font-semibold uppercase tracking-[0.4em] text-neutral-950 shadow-lg shadow-emerald-500/30 transition hover:brightness-110"
+        >
+          Schedule Launch Call
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          href="#hero"
+          class="inline-flex items-center gap-3 rounded-full border border-white/15 px-8 py-3 text-xs font-semibold uppercase tracking-[0.35em] text-neutral-100 transition hover:border-emerald-200 hover:text-emerald-100"
+        >
+          Return to top
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>

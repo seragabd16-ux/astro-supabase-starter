@@ -1,9 +1,83 @@
-<header class="max-w-4xl mx-auto mt-6 mb-16">
-  <nav class="flex justify-between">
-    <a
-      href="/"
-      class="text-2xl font-bold hover:underline hover:underline-offset-4 hover:decoration-green-500"
-      ><span class="text-green-500">&#10022;</span> Astro Supabase Starter
+<header class="px-6 pt-9 pb-6 sm:px-10 lg:px-16">
+  <nav
+    class="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-white/5 px-5 py-4 text-sm uppercase tracking-[0.3em] text-neutral-200 shadow-[0_30px_120px_-80px_rgba(16,185,129,0.6)] backdrop-blur-xl"
+  >
+    <a href="/" class="flex items-center gap-3 text-xs font-semibold text-emerald-200 transition hover:text-emerald-100">
+      <span
+        class="grid h-11 w-11 place-items-center rounded-full border border-emerald-200/50 bg-gradient-to-br from-emerald-500/25 via-teal-400/20 to-cyan-400/25 text-base font-black text-emerald-50 shadow-inner shadow-emerald-500/10"
+      >
+        PS
+      </span>
+      <span class="text-sm tracking-[0.4em]">PalStyle — فلسطين</span>
     </a>
+    <button
+      id="menu-toggle"
+      class="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-inner shadow-emerald-500/10 transition hover:border-emerald-200/60"
+      aria-label="Toggle navigation"
+      aria-expanded="false"
+      type="button"
+    >
+      <span class="sr-only">Toggle navigation</span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
   </nav>
+  <div
+    id="menu-overlay"
+    class="pointer-events-none fixed inset-0 z-40 flex items-start justify-end bg-transparent transition"
+    aria-hidden="true"
+  >
+    <div
+      class="menu-panel pointer-events-auto mt-6 mr-6 w-full max-w-sm rounded-[2.5rem] border border-white/10 bg-white/8 p-8 text-sm text-neutral-200 shadow-[0_60px_180px_-80px_rgba(16,185,129,0.55)] backdrop-blur-2xl"
+    >
+      <div class="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-emerald-200">
+        <span>Navigate</span>
+        <span>القائمة</span>
+      </div>
+      <ul class="mt-6 space-y-5 text-base font-medium uppercase tracking-[0.25em] text-neutral-100">
+        <li><a class="menu-link" href="#journey">Journey</a></li>
+        <li><a class="menu-link" href="#collections">Drops</a></li>
+        <li><a class="menu-link" href="#motion">Motion Stories</a></li>
+        <li><a class="menu-link" href="#payments">Payments</a></li>
+        <li><a class="menu-link" href="#logistics">Logistics</a></li>
+        <li><a class="menu-link" href="#dashboard">Dashboard</a></li>
+        <li><a class="menu-link" href="#shop">Shop الآن</a></li>
+      </ul>
+      <div class="mt-10 space-y-4 rounded-[1.8rem] border border-white/10 bg-white/5 p-5 text-xs leading-relaxed text-neutral-300">
+        <p class="tracking-[0.4em] text-emerald-200/80">Heritage pulse</p>
+        <p class="text-[13px] leading-6 text-neutral-100/90">
+          شبكة خيوط الكوفية تتحرك بخفة في الخلفية لتعكس الإيقاع الجديد لعلامة PalStyle — هادئ، ناعم، وجاهز للبيع العالمي.
+        </p>
+      </div>
+    </div>
+  </div>
+  <script is:inline>
+    const toggle = document.getElementById("menu-toggle");
+    const overlay = document.getElementById("menu-overlay");
+    const body = document.body;
+    const updateState = (open) => {
+      toggle?.setAttribute("aria-expanded", String(open));
+      toggle?.classList.toggle("is-open", open);
+      overlay?.classList.toggle("is-open", open);
+      overlay?.classList.toggle("pointer-events-none", !open);
+      overlay?.setAttribute("aria-hidden", String(!open));
+      body?.classList.toggle("overflow-hidden", open);
+    };
+    toggle?.addEventListener("click", () => {
+      const open = toggle.getAttribute("aria-expanded") !== "true";
+      updateState(open);
+    });
+    overlay?.addEventListener("click", (event) => {
+      if (event.target === overlay) {
+        updateState(false);
+      }
+    });
+    document.querySelectorAll(".menu-link").forEach((link) =>
+      link.addEventListener("click", () => {
+        updateState(false);
+      }),
+    );
+    updateState(false);
+  </script>
 </header>

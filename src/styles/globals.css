@@ -2,16 +2,126 @@
 @plugin "@tailwindcss/typography";
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-neutral-950 text-neutral-50 font-["Space_Grotesk",sans-serif];
+  }
   a {
-    @apply hover:underline hover:underline-offset-2 hover:decoration-green-500;
-  }
-  td {
-    @apply pt-4 pb-6;
-  }
-  th {
-    @apply py-4;
+    @apply transition duration-200 hover:text-emerald-200 hover:no-underline;
   }
   img {
-    @apply border rounded-sm border-neutral-500;
+    @apply rounded-2xl border border-white/10 shadow-lg shadow-emerald-500/10;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur;
+  }
+  .soft-card {
+    @apply rounded-[2.4rem] border border-white/10 bg-white/6 p-8 shadow-[0_30px_120px_-90px_rgba(16,185,129,0.55)] backdrop-blur-xl;
+  }
+  .accent-pill {
+    @apply inline-flex items-center gap-3 rounded-full border border-emerald-200/40 bg-emerald-400/10 px-4 py-2 text-[11px] uppercase tracking-[0.45em] text-emerald-100;
+  }
+  .menu-panel {
+    background-image: linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .menu-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.08) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.25;
+    mix-blend-mode: screen;
+    animation: mesh-flow 24s linear infinite;
+  }
+  .menu-panel > * {
+    position: relative;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center;
+  }
+  .animate-gradient {
+    background-size: 400% 400%;
+    animation: gradient-move 18s ease infinite;
+  }
+  @keyframes gradient-move {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  .animate-orbit {
+    animation: orbit 14s linear infinite;
+    transform-origin: center;
+  }
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg) translateX(16px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(16px) rotate(-360deg);
+    }
+  }
+  .hamburger-line {
+    @apply absolute h-[2px] w-5 rounded-full bg-emerald-100 transition duration-300;
+  }
+  .hamburger-line:nth-child(2) {
+    transform: translateY(-6px);
+  }
+  .hamburger-line:nth-child(3) {
+    transform: translateY(6px);
+  }
+  #menu-toggle.is-open .hamburger-line:nth-child(1) {
+    opacity: 0;
+  }
+  #menu-toggle.is-open .hamburger-line:nth-child(2) {
+    transform: translateY(0) rotate(45deg);
+  }
+  #menu-toggle.is-open .hamburger-line:nth-child(3) {
+    transform: translateY(0) rotate(-45deg);
+  }
+  #menu-overlay {
+    transition: background 0.4s ease;
+  }
+  #menu-overlay.is-open {
+    pointer-events: auto;
+    background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.18), rgba(15, 118, 110, 0.1), transparent 70%);
+  }
+  #menu-overlay .menu-panel {
+    transform: translateY(-12px) scale(0.98);
+    opacity: 0;
+    transition: all 0.35s ease;
+  }
+  #menu-overlay.is-open .menu-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  @keyframes mesh-flow {
+    from {
+      background-position: 0 0, 0 0;
+    }
+    to {
+      background-position: 120px 60px, 60px 120px;
+    }
   }
 }
