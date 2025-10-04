@@ -104,6 +104,7 @@
     transition: background 0.4s ease;
   }
   #menu-overlay.is-open {
+    pointer-events: auto;
     background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.18), rgba(15, 118, 110, 0.1), transparent 70%);
   }
   #menu-overlay .menu-panel {

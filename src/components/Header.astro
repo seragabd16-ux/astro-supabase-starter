@@ -60,6 +60,8 @@
       toggle?.setAttribute("aria-expanded", String(open));
       toggle?.classList.toggle("is-open", open);
       overlay?.classList.toggle("is-open", open);
+      overlay?.classList.toggle("pointer-events-none", !open);
+      overlay?.setAttribute("aria-hidden", String(!open));
       body?.classList.toggle("overflow-hidden", open);
     };
     toggle?.addEventListener("click", () => {
@@ -76,5 +78,6 @@
         updateState(false);
       }),
     );
+    updateState(false);
   </script>
 </header>
